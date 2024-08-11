@@ -7,37 +7,42 @@ package graph
 import (
 	"context"
 	"reviews/graph/model"
+	"reviews/internal/repository"
 )
 
 // ReviewsForMovie is the resolver for the reviewsForMovie field.
 func (r *movieResolver) ReviewsForMovie(ctx context.Context, obj *model.Movie) ([]*model.Review, error) {
-	return []*model.Review{}, nil
+	return r.ReviewRepo.GetReviews(ctx, repository.WithMovieID(obj.ID))
 }
 
 // SubmitReview is the resolver for the submitReview field.
 func (r *mutationResolver) SubmitReview(ctx context.Context, movieReview model.MovieReviewInput) (*model.SubmitReviewResponse, error) {
-	return &model.SubmitReviewResponse{}, nil
+	review, err := r.ReviewRepo.SubmitReview(ctx, movieReview)
+	if err != nil {
+		return &model.SubmitReviewResponse{
+			Code:    500,
+			Success: false,
+			Message: err.Error(),
+		}, nil
+	}
+	return &model.SubmitReviewResponse{
+		Code:        200,
+		Success:     true,
+		Message:     "Review submitted successfully",
+		MovieReview: review,
+	}, nil
 }
 
 // LatestReviews is the resolver for the latestReviews field.
 func (r *queryResolver) LatestReviews(ctx context.Context) ([]*model.Review, error) {
-	return []*model.Review{
-		{
-			ID:      "1",
-			Comment: toPointer("Great movie!"),
-			Rating:  toPointer(5),
-		},
-		{
-			ID:      "2",
-			Comment: toPointer("I've seen better."),
-			Rating:  toPointer(3),
-		},
-	}, nil
+	return r.ReviewRepo.GetReviews(ctx, repository.WithLimit(3), repository.WithOrderBy("id", true))
 }
 
 // Movie is the resolver for the movie field.
 func (r *reviewResolver) Movie(ctx context.Context, obj *model.Review) (*model.Movie, error) {
-	return &model.Movie{}, nil
+	return &model.Movie{
+		ID: obj.MovieID,
+	}, nil
 }
 
 // Movie returns MovieResolver implementation.

@@ -6,6 +6,7 @@ import (
 	"os"
 	"reviews/graph"
 	"reviews/internal/db"
+	"reviews/internal/repository"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
@@ -22,7 +23,13 @@ func main() {
 	db.InitDB()
 	defer db.DB.Close()
 
-	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	reviewRepo := repository.NewReviewRepository(db.DB)
+
+	resolver := &graph.Resolver{
+		ReviewRepo: reviewRepo,
+	}
+
+	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)

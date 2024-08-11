@@ -114,3 +114,16 @@ func (r *ReviewRepository) SubmitReview(ctx context.Context, input model.MovieRe
 		Rating:  input.Rating,
 	}, nil
 }
+
+func (r *ReviewRepository) GetOverallRatingForMovie(ctx context.Context, movieID string) (float64, error) {
+	query := `SELECT AVG(rating) FROM reviews WHERE movie_id = ?`
+	var avgRating sql.NullFloat64
+	err := r.db.QueryRowContext(ctx, query, movieID).Scan(&avgRating)
+	if err != nil {
+		return 0, err
+	}
+	if !avgRating.Valid {
+		return 0, nil // レビューがない場合は0を返す
+	}
+	return avgRating.Float64, nil
+}

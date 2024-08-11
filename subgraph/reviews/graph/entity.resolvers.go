@@ -11,23 +11,20 @@ import (
 
 // FindMovieByID is the resolver for the findMovieByID field.
 func (r *entityResolver) FindMovieByID(ctx context.Context, id string) (*model.Movie, error) {
-	return &model.Movie{
-		ID:            id,
-		OverallRating: toPointer(3.5),
-	}, nil
+	movie := &model.Movie{
+		ID: id,
+	}
+
+	overallRating, err := r.ReviewRepo.GetOverallRatingForMovie(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+	movie.OverallRating = &overallRating
+
+	return movie, nil
 }
 
 // Entity returns EntityResolver implementation.
 func (r *Resolver) Entity() EntityResolver { return &entityResolver{r} }
 
 type entityResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-func toPointer[T any](v T) *T {
-	return &v
-}
