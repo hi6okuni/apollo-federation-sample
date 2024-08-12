@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { TypedDocumentNode as DocumentNode } from "@graphql-typed-document-node/core";
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = {
@@ -79,3 +80,48 @@ export type SubmitReviewResponse = {
 	movieReview?: Maybe<Review>;
 	success: Scalars["Boolean"]["output"];
 };
+
+export type MoviesQueryVariables = Exact<{ [key: string]: never }>;
+
+export type MoviesQuery = {
+	__typename?: "Query";
+	movies: Array<{
+		__typename?: "Movie";
+		id: string;
+		title?: string | null;
+		year?: number | null;
+		overallRating?: number | null;
+	}>;
+};
+
+export const MoviesDocument = {
+	kind: "Document",
+	definitions: [
+		{
+			kind: "OperationDefinition",
+			operation: "query",
+			name: { kind: "Name", value: "Movies" },
+			selectionSet: {
+				kind: "SelectionSet",
+				selections: [
+					{
+						kind: "Field",
+						name: { kind: "Name", value: "movies" },
+						selectionSet: {
+							kind: "SelectionSet",
+							selections: [
+								{ kind: "Field", name: { kind: "Name", value: "id" } },
+								{ kind: "Field", name: { kind: "Name", value: "title" } },
+								{ kind: "Field", name: { kind: "Name", value: "year" } },
+								{
+									kind: "Field",
+									name: { kind: "Name", value: "overallRating" },
+								},
+							],
+						},
+					},
+				],
+			},
+		},
+	],
+} as unknown as DocumentNode<MoviesQuery, MoviesQueryVariables>;
