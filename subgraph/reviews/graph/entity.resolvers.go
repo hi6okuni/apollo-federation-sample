@@ -7,6 +7,7 @@ package graph
 import (
 	"context"
 	"reviews/graph/model"
+	"reviews/internal/repository"
 )
 
 // FindMovieByID is the resolver for the findMovieByID field.
@@ -20,6 +21,12 @@ func (r *entityResolver) FindMovieByID(ctx context.Context, id string) (*model.M
 		return nil, err
 	}
 	movie.OverallRating = &overallRating
+
+	reviews, err := r.ReviewRepo.GetReviews(ctx, repository.WithMovieID(id))
+	if err != nil {
+		return nil, err
+	}
+	movie.ReviewsForMovie = reviews
 
 	return movie, nil
 }
