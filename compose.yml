@@ -1,4 +1,4 @@
-version: '3.8'
+name: apollo-federation-sample
 
 services:
   gateway:
@@ -10,8 +10,10 @@ services:
     environment:
       - PORT=4000
     depends_on:
-      - reviews
-      - movies
+      reviews:
+        condition: service_started
+      movies:
+        condition: service_started
 
   reviews:
     build:
@@ -34,3 +36,4 @@ services:
 networks:
   default:
     name: federation-network
+
