@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    environment:
+      - PORT=4000
+    depends_on:
+      - reviews
+      - movies
+
+  reviews:
+    build:
+      context: ./subgraph/reviews
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+    environment:
+      - PORT=4001
+
+  movies:
+    build:
+      context: ./subgraph/movies
+      dockerfile: Dockerfile
+    ports:
+      - "4002:4002"
+    environment:
+      - PORT=4002
+
+networks:
+  default:
+    name: federation-network

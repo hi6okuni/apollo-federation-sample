@@ -5,8 +5,8 @@ import { ApolloGateway, IntrospectAndCompose } from "@apollo/gateway";
 const gateway = new ApolloGateway({
 	supergraphSdl: new IntrospectAndCompose({
 		subgraphs: [
-			{ name: "reviews", url: "http://localhost:4001/query" },
-			{ name: "movies", url: "http://localhost:4002/query" },
+			{ name: "reviews", url: "http://reviews:4001/query" },
+			{ name: "movies", url: "http://movies:4002/query" },
 		],
 	}),
 });
@@ -16,7 +16,9 @@ const server = new ApolloServer({
 });
 
 const startServer = async () => {
-	const { url } = await startStandaloneServer(server);
+	const { url } = await startStandaloneServer(server, {
+		listen: { port: 4000, host: "0.0.0.0" },
+	});
 	console.log(`🚀 Server ready at ${url}`);
 };
 
