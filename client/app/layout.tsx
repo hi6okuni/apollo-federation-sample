@@ -11,14 +11,20 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
+	modal,
 	children,
 }: Readonly<{
+	modal: React.ReactNode;
 	children: React.ReactNode;
 }>) {
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<ApolloWrapper>{children}</ApolloWrapper>
+				<ApolloWrapper>
+					{modal}
+					{children}
+					<div id="modal-root" />
+				</ApolloWrapper>
 			</body>
 		</html>
 	);
