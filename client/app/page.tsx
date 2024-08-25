@@ -2,7 +2,7 @@
 import { graphql } from "../graphql/gql";
 import { useQuery } from "@apollo/client";
 
-const getMoviesDocument = graphql(`
+const MoviesDocument = graphql(`
   query Movies {
     movies {
       id
@@ -14,14 +14,21 @@ const getMoviesDocument = graphql(`
   `);
 
 export default function Home() {
-	const { data } = useQuery(getMoviesDocument);
+	const { data } = useQuery(MoviesDocument);
 	const movies = data?.movies || [];
-
-	console.log(movies);
 
 	return (
 		<main className="flex min-h-screen flex-col items-center justify-between p-24">
-			mooviews
+			<h1>mooviews</h1>
+			<section className="flex flex-wrap justify-center">
+				{movies.map((movie) => (
+					<article key={movie.id} className="m-4 p-4 border">
+						<h2>{movie.title}</h2>
+						<p>{movie.year}</p>
+						<p>{movie.overallRating}</p>
+					</article>
+				))}
+			</section>
 		</main>
 	);
 }

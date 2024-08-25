@@ -8,7 +8,13 @@ const config: CodegenConfig = {
 		"./graphql/": {
 			preset: "client",
 			plugins: [],
+			config: {
+				useTypeImports: true,
+			},
 		},
+	},
+	hooks: {
+		afterAllFileWrite: ["biome format --write"],
 	},
 };
 
