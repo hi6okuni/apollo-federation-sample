@@ -1,4 +1,5 @@
 "use client";
+
 import { ApolloProvider } from "@apollo/client";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 

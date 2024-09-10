@@ -1,7 +1,9 @@
+"use client";
+
 export default function Page({ params }: { params: { title: string } }) {
 	return (
-		<div>
-			<h1>{params.title}</h1>
+		<div className="h-screen flex items-center justify-center">
+			<div className="[view-transition-name:title]">{params.title}</div>
 		</div>
 	);
 }
