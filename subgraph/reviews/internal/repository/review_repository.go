@@ -108,7 +108,7 @@ func (r *ReviewRepository) SubmitReview(ctx context.Context, input model.MovieRe
 
 	id, _ := result.LastInsertId()
 	return &model.Review{
-		ID:      string(id),
+		ID:      fmt.Sprint(id),
 		MovieID: input.MovieID,
 		Comment: input.Comment,
 		Rating:  input.Rating,
