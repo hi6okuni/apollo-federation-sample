@@ -23,6 +23,8 @@ services:
       - "4001:4001"
     environment:
       - PORT=4001
+    volumes:
+      - ./subgraph/reviews/data:/root/reviews.db
 
   movies:
     build:
@@ -32,6 +34,8 @@ services:
       - "4002:4002"
     environment:
       - PORT=4002
+    volumes:
+      - ./subgraph/movies/movies.db:/root/movies.db
 
 networks:
   default:
